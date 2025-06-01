@@ -1,8 +1,8 @@
-// const { DataTypes } = require('sequelize');
-// const sequelize = require('../database');
-// const bcrypt = require('bcrypt');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../database');
+const bcrypt = require('bcrypt');
 
-// const User = sequelize.define('user', {
+// const Users = sequelize.define('users', {
 //   id: {
 //     type: DataTypes.INTEGER,
 //     primaryKey: true,
@@ -82,80 +82,31 @@
 // });
 
 // // Instance method to compare passwords
-// // User.prototype.comparePassword = async function(candidatePassword) {
-// //   return await bcrypt.compare(candidatePassword, this.password);
-// // };
-
-// // module.exports = User;
-
-// module.exports = {
-//   attributes: {
-//     full_name: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//     },
-//     email: {
-//       type: DataTypes.STRING,
-//       allowNull: true,
-//       unique: true,
-//     },
-//     phone: {
-//       type: DataTypes.STRING,
-//       allowNull: true,
-//       unique: true,
-//     },
-//     password: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//     },
-//   },
+// Users.prototype.comparePassword = async function(candidatePassword) {
+//   return await bcrypt.compare(candidatePassword, this.password);
 // };
 
-
-
-
-
-
-
-
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
-const bcrypt = require('bcrypt');
-
-const User = sequelize.define('user', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  full_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  phone: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-}, {
-  timestamps: true,
-  hooks: {
-    beforeSave: async (user) => {
-      if (user.changed('password')) {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
-      }
-    }
-  }
-});
-
 module.exports = User;
+
+module.exports = {
+  attributes: {
+    full_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+};
