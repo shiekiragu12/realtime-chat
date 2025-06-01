@@ -1,6 +1,45 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
-const bcrypt = require('bcrypt');
+
+
+
+
+module.exports = (sequelize, DataTypes) => {
+  const Message = sequelize.define('Message', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    sender_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    receiver_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM('sent', 'delivered', 'read'),
+      defaultValue: 'sent',
+    },
+  }, {
+    tableName: 'messages',
+    timestamps: true,
+  });
+
+  // Message.associate = function(models) {
+  //   Message.belongsTo(models.User, { foreignKey: 'sender_id', as: 'sender' });
+  //   Message.belongsTo(models.User, { foreignKey: 'receiver_id', as: 'receiver' });
+  // };
+
+  return Message;
+};
+
 
 // const Message = sequelize.define('message', {
 //   id: {
@@ -49,21 +88,6 @@ const bcrypt = require('bcrypt');
 
 
 
-
-module.exports = (sequelize, DataTypes) => {
-  const Message = sequelize.define('Message', {
-    full_name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    password: DataTypes.STRING
-  }, {});
-
-  Message.associate = function(models) {
-
-  };
-
-  return Message;
-};
 
 
 

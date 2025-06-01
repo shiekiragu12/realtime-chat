@@ -52,7 +52,7 @@ router.post('/', ctrl.createMessage);
  *                 properties:
  *                   id:
  *                     type: integer
- *                   sender:
+ *                   sender_id:
  *                     type: string
  *                   content:
  *                     type: string
