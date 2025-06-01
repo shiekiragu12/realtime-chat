@@ -1,25 +1,40 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert('messages', [
+      {
+        sender_id: 3,
+        receiver_id: 1,
+        content: 'Habari yako? Nilikuwa nauliza kuhusu mkutano wa kesho.',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        sender_id: 2,
+        receiver_id: 1,
+        content: 'Sawa basi, tutaonana saa nne asubuhi.',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        sender_id: 3,
+        receiver_id: 2,
+        content: 'Nimepata ujumbe wako. Ahsante sana!',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        sender_id: 1,
+        receiver_id: 3,
+        content: 'Tafadhali nitumie faili la jana.',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], {});
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('Messages', null, {});
   }
 };
