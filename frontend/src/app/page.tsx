@@ -1,103 +1,171 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
+import ChatInput from './components/ChatInput';
+import MessageList from './components/MessageList';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+
+type Message = {
+  id: string;
+  text: string;
+  sender: string;
+  avatar: string;
+  timestamp: Date;
+  status: 'sent' | 'delivered' | 'read';
+};
+
+type User = {
+  id: string;
+  name: string;
+  avatar: string;
+  status: 'online' | 'offline';
+};
+
+export default function ChatPage() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [currentUser, setCurrentUser] = useState<User>({
+    id: '',
+    name: '',
+    avatar: '',
+    status: 'online'
+  });
+  const [users, setUsers] = useState<User[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Generate random user for demo
+    const userId = `user_${Math.floor(Math.random() * 10000)}`;
+    const username = `User${Math.floor(Math.random() * 1000)}`;
+    const avatar = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${username}`;
+    
+    setCurrentUser({
+      id: userId,
+      name: username,
+      avatar,
+      status: 'online'
+    });
+
+    // Mock users list
+    setUsers([
+      {
+        id: 'user_1',
+        name: 'Alex Johnson',
+        avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Alex',
+        status: 'online'
+      },
+      {
+        id: 'user_2',
+        name: 'Sam Wilson',
+        avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Sam',
+        status: 'offline'
+      },
+      {
+        id: 'user_3',
+        name: 'Taylor Swift',
+        avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Taylor',
+        status: 'online'
+      }
+    ]);
+
+    // Connect to Socket.IO server
+    const newSocket = io('http://localhost:3001');
+    setSocket(newSocket);
+
+    // Listen for incoming messages
+    newSocket.on('chatMessage', (message: Message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    // Load initial messages (mock)
+    setMessages([
+      {
+        id: '1',
+        text: 'Hey there! Welcome to the chat!',
+        sender: 'Alex Johnson',
+        avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Alex',
+        timestamp: new Date(Date.now() - 3600000),
+        status: 'read'
+      },
+      {
+        id: '2',
+        text: 'How are you doing today?',
+        sender: 'Alex Johnson',
+        avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Alex',
+        timestamp: new Date(Date.now() - 1800000),
+        status: 'read'
+      },
+      {
+        id: '3',
+        text: "I'm doing great! Just setting up this new chat app.",
+        sender: currentUser.name || 'You',
+        avatar: currentUser.avatar,
+        timestamp: new Date(Date.now() - 900000),
+        status: 'read'
+      }
+    ]);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const sendMessage = (text: string) => {
+    if (text.trim() && socket) {
+      const message: Message = {
+        id: Date.now().toString(),
+        text,
+        sender: currentUser.name,
+        avatar: currentUser.avatar,
+        timestamp: new Date(),
+        status: 'sent'
+      };
+      socket.emit('chatMessage', message);
+      // Optimistic update
+      setMessages((prev) => [...prev, message]);
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex bg-gray-50 h-screen overflow-hidden text-gray-800">
+      {/* Sidebar */}
+      <Sidebar 
+        users={users} 
+        currentUser={currentUser} 
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Main Chat Area */}
+      <div className="flex flex-col flex-1">
+        {/* Header */}
+        <Header 
+          currentUser={currentUser}
+          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+
+        {/* Messages */}
+        <div className="flex-1 bg-white p-4 overflow-y-auto">
+          <div className="mx-auto max-w-3xl">
+            <MessageList messages={messages} currentUser={currentUser} />
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Input */}
+        <div className="bg-white p-4 border-gray-200 border-t">
+          <div className="mx-auto max-w-3xl">
+            <ChatInput onSendMessage={sendMessage} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
