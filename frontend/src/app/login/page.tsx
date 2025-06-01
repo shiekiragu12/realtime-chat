@@ -122,7 +122,7 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <div className="mt-6">
+          <div className="hidden mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="border-gray-300 border-t w-full"></div>
