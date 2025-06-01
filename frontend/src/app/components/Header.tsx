@@ -17,7 +17,7 @@ export default function Header({ currentUser, onMenuClick }: HeaderProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <h1 className="font-bold text-gray-800 text-xl">NextChat</h1>
+        <h1 className="font-bold text-gray-800 text-xl">Realtime Chat</h1>
       </div>
       <div className="flex items-center space-x-3">
         <div className="hidden sm:block text-right">
