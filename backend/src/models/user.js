@@ -1,112 +1,29 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
-const bcrypt = require('bcrypt');
-
-// const Users = sequelize.define('users', {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true
-//   },
-//   full_name: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     validate: {
-//       notEmpty: {
-//         msg: 'Full name is required'
-//       },
-//       len: {
-//         args: [2, 50],
-//         msg: 'Full name must be between 2 and 50 characters'
-//       }
-//     }
-//   },
-//   email: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     unique: {
-//       msg: 'Email already exists'
-//     },
-//     validate: {
-//       isEmail: {
-//         msg: 'Please provide a valid email address'
-//       },
-//       notEmpty: {
-//         msg: 'Email is required'
-//       }
-//     }
-//   },
-//   phone: {
-//     type: DataTypes.STRING,
-//     allowNull: true,
-//     unique: {
-//       msg: 'Phone number already exists'
-//     },
-//     validate: {
-//       is: {
-//         args: /^[0-9]{10,15}$/,
-//         msg: 'Please provide a valid phone number'
-//       }
-//     }
-//   },
-//   password: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     validate: {
-//       notEmpty: {
-//         msg: 'Password is required'
-//       },
-//       len: {
-//         args: [8, 100],
-//         msg: 'Password must be at least 8 characters'
-//       }
-//     }
-//   },
-//   createdAt: {
-//     type: DataTypes.DATE,
-//     defaultValue: DataTypes.NOW
-//   },
-//   updatedAt: {
-//     type: DataTypes.DATE,
-//     defaultValue: DataTypes.NOW
-//   }
-// }, {
-//   hooks: {
-//     beforeSave: async (user) => {
-//       if (user.changed('password')) {
-//         const salt = await bcrypt.genSalt(10);
-//         user.password = await bcrypt.hash(user.password, salt);
-//       }
-//     }
-//   }
-// });
-
-// // Instance method to compare passwords
-// Users.prototype.comparePassword = async function(candidatePassword) {
-//   return await bcrypt.compare(candidatePassword, this.password);
-// };
-
-module.exports = User;
-
-module.exports = {
-  attributes: {
-    full_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class user extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  user.init({
+    id: DataTypes.INTEGER,
+    full_name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    password: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'user',
+  });
+  return user;
 };
