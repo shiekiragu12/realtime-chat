@@ -14,7 +14,7 @@ const Message = sequelize.define('message', {
   },
   receiver_id: {
     type: DataTypes.INTEGER,
-    allowNull: true, // Optional if you're supporting group or broadcast
+    allowNull: true,
   },
   content: {
     type: DataTypes.TEXT,

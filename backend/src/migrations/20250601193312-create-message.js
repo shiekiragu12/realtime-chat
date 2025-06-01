@@ -22,8 +22,11 @@ module.exports = {
         type: Sequelize.TEXT
       },
       status: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM('sent', 'delivered', 'read'),
+        allowNull: false,
+        defaultValue: 'sent'
       },
+
       createdAt: {
         type: Sequelize.DATE
       },
