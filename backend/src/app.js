@@ -36,7 +36,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.use('/api/v1', routes);
+app.use('/api', routes);
 app.use(errorHandler);
 
 module.exports = app;

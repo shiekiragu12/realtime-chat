@@ -2,49 +2,69 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 const bcrypt = require('bcrypt');
 
-const Message = sequelize.define('message', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  sender_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  receiver_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  content: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        msg: 'Message content is required',
-      },
-      len: {
-        args: [1, 1000],
-        msg: 'Message content must be between 1 and 1000 characters',
-      },
-    },
-  },
-  status: {
-    type: DataTypes.ENUM('sent', 'delivered', 'read'),
-    allowNull: false,
-    defaultValue: 'sent',
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  }
-});
+// const Message = sequelize.define('message', {
+//   id: {
+//     type: DataTypes.INTEGER,
+//     primaryKey: true,
+//     autoIncrement: true,
+//   },
+//   sender_id: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+//   receiver_id: {
+//     type: DataTypes.INTEGER,
+//     allowNull: true,
+//   },
+//   content: {
+//     type: DataTypes.TEXT,
+//     allowNull: false,
+//     validate: {
+//       notEmpty: {
+//         msg: 'Message content is required',
+//       },
+//       len: {
+//         args: [1, 1000],
+//         msg: 'Message content must be between 1 and 1000 characters',
+//       },
+//     },
+//   },
+//   status: {
+//     type: DataTypes.ENUM('sent', 'delivered', 'read'),
+//     allowNull: false,
+//     defaultValue: 'sent',
+//   },
+//   createdAt: {
+//     type: DataTypes.DATE,
+//     defaultValue: DataTypes.NOW,
+//   },
+//   updatedAt: {
+//     type: DataTypes.DATE,
+//     defaultValue: DataTypes.NOW,
+//   }
+// });
 
-module.exports = Message;
+// module.exports = Message;
+
+
+
+
+
+module.exports = (sequelize, DataTypes) => {
+  const Message = sequelize.define('Message', {
+    full_name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    password: DataTypes.STRING
+  }, {});
+
+  Message.associate = function(models) {
+
+  };
+
+  return Message;
+};
+
 
 
 
