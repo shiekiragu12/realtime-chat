@@ -6,6 +6,7 @@ import ChatInput from './components/ChatInput';
 import MessageList from './components/MessageList';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute';
 
 type Message = {
   id: string;
@@ -134,7 +135,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex bg-gray-50 h-screen overflow-hidden text-gray-800">
+   <ProtectedRoute>
+     <div className="flex bg-gray-50 h-screen overflow-hidden text-gray-800">
       {/* Sidebar */}
       <Sidebar 
         users={users} 
@@ -167,5 +169,6 @@ export default function ChatPage() {
         </div>
       </div>
     </div>
+   </ProtectedRoute>
   );
 }
