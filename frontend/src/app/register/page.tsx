@@ -9,7 +9,7 @@ import Link from 'next/link';
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone_number, setPhoneNumber] = useState('');
+  const [phone, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +23,7 @@ export default function RegisterPage() {
       return;
     }
     try {
-      await register(name, email, password, phone_number);
+      await register(name, email, password, phone);
     } catch (error) {
       // Handled in auth context
     }
@@ -90,7 +90,7 @@ export default function RegisterPage() {
                 name="phone"
                 type="tel"
                 required
-                value={phone_number}
+                value={phone}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
               />

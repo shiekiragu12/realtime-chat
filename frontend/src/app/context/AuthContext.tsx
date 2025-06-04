@@ -14,7 +14,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, phone_number: string) => Promise<void>;
+  register: (name: string, email: string, password: string, phone: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
   error: string | null;
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string, phone_number: string) => {
+  const register = async (name: string, email: string, password: string, phone: string) => {
     try {
       setLoading(true);
       setError(null);
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ full_name: name, email: email, password: password, phone_number: phone_number }),
+        body: JSON.stringify({ full_name: name, email: email, password: password, phone: phone }),
       });
 
       if (!response.ok) {
