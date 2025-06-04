@@ -73,7 +73,7 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const modelNames = ["message"];
+const modelNames = ["user"];
 
 modelNames.forEach((modelName) => {
   try {
