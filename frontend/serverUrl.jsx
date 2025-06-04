@@ -1,0 +1,1 @@
+export const baseuRl = 'localhost/1999/api'
