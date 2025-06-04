@@ -74,7 +74,7 @@ export default function ChatPage() {
     ]);
 
     // Connect to Socket.IO server
-    const newSocket = io('http://localhost:1999');
+    const newSocket = io('http://localhost:1999/api');
     setSocket(newSocket);
 
     // Listen for incoming messages
