@@ -52,10 +52,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // In a real app, you would call your authentication API
       if (email === 'demo@example.com' && password === 'password') {
         const demoUser = {
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: 'demo@example.com',
           avatar: 'https://api.dicebear.com/7.x/thumbs/svg?seed=Demo'
         };
-        
+
         localStorage.setItem('chat-user', JSON.stringify(demoUser));
         setUser(demoUser);
         router.push('/');
@@ -83,18 +83,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would call your registration API
-      const newUser = {
-        id: `user_${Math.random().toString(36).substring(2, 9)}`,
-        name,
-        email,
-        avatar: `https://api.dicebear.com/7.x/thumbs/svg?seed=${name}`
-      };
-      
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const newUser = await response.json();
+
       localStorage.setItem('chat-user', JSON.stringify(newUser));
       setUser(newUser);
       router.push('/');
@@ -105,6 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
+
 
   const logout = () => {
     localStorage.removeItem('chat-user');
