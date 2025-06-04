@@ -12,7 +12,6 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST']
   }
 });
 // socket ui setup
@@ -30,7 +29,12 @@ io.on('connection', (socket) => {
 
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, 
+}));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
