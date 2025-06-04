@@ -9,8 +9,10 @@ import Link from 'next/link';
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone_number, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { register, user, loading } = useAuth();
   const router = useRouter();
 
@@ -21,9 +23,9 @@ export default function RegisterPage() {
       return;
     }
     try {
-      await register(name, email, password);
+      await register(name, email, password, phone_number);
     } catch (error) {
-      // Error is handled in the auth context
+      // Handled in auth context
     }
   };
 
@@ -53,81 +55,96 @@ export default function RegisterPage() {
               <label htmlFor="name" className="block font-medium text-gray-700 text-sm">
                 Full name
               </label>
-              <div className="mt-1">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="block shadow-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm appearance-none placeholder-gray-400"
-                />
-              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
+              />
             </div>
 
             <div>
               <label htmlFor="email" className="block font-medium text-gray-700 text-sm">
                 Email address
               </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block shadow-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm appearance-none placeholder-gray-400"
-                />
-              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block font-medium text-gray-700 text-sm">
+                Phone number
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                value={phone_number}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
+              />
             </div>
 
             <div>
               <label htmlFor="password" className="block font-medium text-gray-700 text-sm">
                 Password
               </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block shadow-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm appearance-none placeholder-gray-400"
-                />
-              </div>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
+              />
             </div>
 
             <div>
               <label htmlFor="confirm-password" className="block font-medium text-gray-700 text-sm">
                 Confirm Password
               </label>
-              <div className="mt-1">
-                <input
-                  id="confirm-password"
-                  name="confirm-password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block shadow-sm px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm appearance-none placeholder-gray-400"
-                />
-              </div>
+              <input
+                id="confirm-password"
+                name="confirm-password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="block shadow-sm mt-1 px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full text-black sm:text-sm"
+              />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="show-password"
+                type="checkbox"
+                className="border-gray-300 rounded focus:ring-indigo-500 w-4 h-4 text-indigo-600"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />
+              <label htmlFor="show-password" className="block ml-2 text-gray-900 text-sm">
+                Show password
+              </label>
             </div>
 
             <div>
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  loading ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
               >
                 {loading ? (
                   <>

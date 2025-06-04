@@ -14,7 +14,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, phone_number: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
   error: string | null;
@@ -79,17 +79,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, phone_number: string) => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ full_name: name, email: email, password: password, phone_number: phone_number }),
       });
 
       if (!response.ok) {
